@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"os/exec"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -27,6 +28,7 @@ import (
 var cfgFile string
 var name string
 var age string
+var showHome string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -47,6 +49,15 @@ to quickly create a Cobra application.`,
 
 		if len(age) != 0 {
 			fmt.Printf(" age is %s", age)
+		}
+
+		if len(showHome) != 0 {
+			cmd1 := exec.Command("ls", "-lah")
+			out, err := cmd1.CombinedOutput()
+			if err != nil {
+				fmt.Printf("cmd.Run() failed with %s\n", err)
+			}
+			fmt.Printf("\ncombined out:\n%s\n", string(out))
 		}
 	},
 }
@@ -74,6 +85,7 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().StringVarP(&name, "name", "n", "", "Your name")
 	rootCmd.Flags().StringVarP(&age, "age", "g", "", "Your age")
+	rootCmd.Flags().StringVarP(&showHome, "show home", "s", "", "Show your home dir")
 }
 
 // initConfig reads in config file and ENV variables if set.
